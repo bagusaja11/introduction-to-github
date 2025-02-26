@@ -1,0 +1,78 @@
+# Caching HTTPS Credentials for Git Commits
+
+When pushing Git commits over HTTPS, you can cache your credentials to streamline the process. There are several methods to do this, each with its own security implications. Here are the most common methods:
+
+## 1. Credential Helpers
+
+### a. `cache`
+The `cache` helper temporarily stores your credentials in memory for a specified duration (default is 15 minutes).
+
+**Usage:**
+```sh
+git config --global credential.helper cache
+```
+
+**Set custom timeout (e.g., 1 hour):**
+```sh
+git config --global credential.helper 'cache --timeout=3600'
+```
+
+**Security Implications:**
+- Credentials are stored in memory and are cleared after the timeout.
+- Suitable for short-term use.
+
+### b. `store`
+The `store` helper saves your credentials in a plain-text file on disk (`~/.git-credentials`).
+
+**Usage:**
+```sh
+git config --global credential.helper store
+```
+
+**Security Implications:**
+- Credentials are stored unencrypted on disk.
+- Not recommended for sensitive environments.
+
+### c. `osxkeychain` (macOS), `wincred` (Windows), `libsecret` (Linux)
+These helpers integrate with the system's secure credential storage.
+
+**Usage (macOS):**
+```sh
+git config --global credential.helper osxkeychain
+```
+
+**Usage (Windows):**
+```sh
+git config --global credential.helper wincred
+```
+
+**Usage (Linux with libsecret):**
+```sh
+git config --global credential.helper libsecret
+```
+
+**Security Implications:**
+- Credentials are stored securely using the system's credential manager.
+- Recommended for long-term use.
+
+## 2. Personal Access Tokens (PATs)
+
+When using services like GitHub, GitLab, or Bitbucket, you can use Personal Access Tokens (PATs) instead of passwords. PATs can be scoped to provide limited access and can be revoked if compromised.
+
+**Usage:**
+
+1. Generate a PAT from your service provider.
+2. Use the PAT in place of your password when prompted.
+
+**Security Implications:**
+- PATs can be limited in scope and duration, improving security.
+- Tokens should be stored securely and not hard-coded in scripts.
+
+## Security Best Practices
+
+- **Use Secure Storage**: Prefer credential helpers that integrate with the system's secure storage (e.g., `osxkeychain`, `wincred`, `libsecret`).
+- **Limit Scope and Duration**: When using PATs, limit their scope and duration.
+- **Regularly Rotate Credentials**: Change your credentials periodically and revoke old PATs.
+- **Avoid Plain-Text Storage**: Do not use the `store` helper in sensitive environments.
+
+By understanding the different methods and their security implications, you can choose the most appropriate method for caching your HTTPS credentials when pushing Git commits.
